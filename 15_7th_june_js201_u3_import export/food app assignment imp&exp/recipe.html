@@ -1,0 +1,99 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #navbar{
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid green;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #options{
+            display: flex;
+            gap: 20px;
+        }
+        #container{
+            width: 70%;
+            margin: auto;
+            text-align: center;
+            border-radius: 10px;
+            border: 2px solid black;
+        }
+        #container>img{
+            display: block;
+            margin: auto;
+            height: 400px;
+            margin-top: 20px;
+        }
+        
+            </style>
+</head>
+<body>
+    <div id="navbar"></div>
+    <div id="container"><h2>Receipe of the day !!</h2></div>
+</body>
+</html>
+<script type="module">
+
+    import navbar from '/components.js/navbar.js'
+    console.log(navbar)
+    document.getElementById('navbar').innerHTML=navbar;
+    
+    </script>
+
+<script>
+
+    ///////////// fetching url and collecting data
+    const movies_div = document.querySelector('#container');
+
+    async function  searchMovies(){ // async function returns a promise
+
+    try
+    {
+
+    let url=`https://www.themealdb.com/api/json/v1/1/random.php`
+    let res=await fetch(url)
+    let data =await res.json() // collecting data
+    // return data.meals // .search because our array is inside data in search  
+    // console.log(data.meals)
+ 
+    appendMovies(data.meals)
+
+    }
+    catch(error){console.log(error)}
+    
+
+ }
+ //////////////////////////////fetching url and collecting data end
+ searchMovies()
+
+ function appendMovies(movies){
+
+movies_div.innerHTML=null
+
+if(movies===undefined){return false} // to avoid errors of no-data
+
+movies.forEach(function(el){
+
+const h2 = document.createElement('h2');
+h2.innerText='Receipe of the day !!'
+const p = document.createElement('h3');
+if(el.strTags) p.innerText=el.strTags+' : '+el.strArea+' Dish'
+
+
+const image = document.createElement('img');
+image.src=el.strMealThumb
+
+
+movies_div.append(h2,image,p)
+
+
+
+})}
+
+</script>

@@ -1,0 +1,215 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title>
+    <style>
+
+#navbar{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid green;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+#options{
+    display: flex;
+    gap: 20px;
+}
+*{
+        font-family: sans-serif;
+        background-color:aliceblue ;
+    }
+
+input{
+    width: 508px;
+    display: flex;
+    margin: auto;
+    height: 40px;
+    border-radius: 5px;
+}
+#movies{
+    height: 200px;
+    width: 500px;
+    /* border: 1px solid black; */
+    border-top: none;
+    /* overflow: scroll; */
+    margin: auto;
+    border-radius: 5px;
+}
+p{
+    border: 1px solid black;
+    cursor: pointer;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    /* margin: auto; */
+    text-align: center;
+}
+p:hover{
+    color: red;
+}
+
+#inputDiv{
+    display: flex;
+    align-items: center;
+    width: 50%;
+   
+    /* border: 1px solid red; */
+    display: block;
+    align-items: center;
+    justify-content: center; border-radius: 5px;
+    margin: auto;
+}
+#inputDiv>img{width: 60%;height: 350px;}
+button,img{
+    display: block;
+    margin: auto;
+    margin-top: 2%;
+    margin-bottom: 1%; cursor: pointer;
+}
+button{
+    height: 40px;
+    border-radius: 5px; 
+}
+button:hover{color: white; background-color: black;}
+h2{cursor: pointer;}
+
+    </style>
+</head>
+<body>
+    <div id="navbar"></div>
+    <h2></h2>
+    <div id="inputDiv">
+
+        <input type="text" id="query" oninput="debounceFunction(main,1000)" placeholder="🔍 Enter the receipe you want to search for">
+
+
+    </div>
+    <div id="movies"></div>
+
+</body>
+</html>
+
+<script type="module">
+//////////////////////////////////////////// navbar script
+import navbar from '/components.js/navbar.js'
+console.log(navbar)
+document.getElementById('navbar').innerHTML=navbar;
+//////////////////////////////////////////// navbar script end
+
+</script>
+
+<script>
+
+let id;
+    ///////////// fetching url and collecting data
+    const movies_div = document.querySelector('#movies');
+    async function  searchMovies(q){ // async function returns a promise
+
+    try
+    {
+    let url=`https://www.themealdb.com/api/json/v1/1/search.php?s=${q}`
+
+    let res=await fetch(url)
+    let data =await res.json() // collecting data
+    return data.meals // .search because our array is inside data in search  
+    // console.log(data.meals)
+    }
+    catch(error){console.log(error)}
+    
+
+ }
+ //////////////////////////////fetching url and collecting data end
+
+ /////////////////////////////////////// taking input value 
+ async function main(){
+
+    const qurey = document.querySelector('#query').value;
+    console.log(qurey)
+    let response=searchMovies(qurey)
+    let data=await response // getting data in objects form
+    console.log(data)
+    movies_div.style.border='1px solid black'
+    movies_div.style.overflow='scroll'
+    if(qurey===''){movies_div.style.border='';movies_div.style.overflow=''}
+    appendMovies(data)
+
+}
+/////////////////////////////////////// taking input value  end
+
+///////////////////////////////////// display in body
+ function appendMovies(movies){
+
+    movies_div.innerHTML=null
+
+  if(movies===undefined){return false} // to avoid errors of no-data
+
+ movies.forEach(function(el){
+
+
+ const p = document.createElement('p');
+ if(el.strTags) p.innerText=el.strTags+' : '+el.strArea+' Dish'
+ 
+ 
+ const image = document.createElement('img');
+ image.src=el.strMealThumb
+
+ const button = document.createElement('button');
+ button.innerText='Go back to Search Page'
+ button.addEventListener('click',function(event){
+   window.location.reload()
+ })
+ movies_div.append(p)
+ p.addEventListener('click',function(event){
+    movies_div.innerHTML=''
+    // movies_div.append(p,image,button)
+    const inputDiv = document.querySelector('#inputDiv');
+    inputDiv.innerHTML=''
+inputDiv.append(p,image,button)
+    movies_div.style.border='';movies_div.style.overflow=''
+    inputDiv.style.border='2px solid grey'
+ })
+    
+ });
+
+ }
+///////////////////////////////////// display in body end
+
+
+////////////////////////////////////// debounceFunction
+function debounceFunction(func, dealy){
+
+if(id){clearTimeout(id)}
+
+id=setTimeout(function(){
+
+    func();
+
+},dealy)
+
+}
+////////////////////////////////////// debounceFunction end
+</script>
+
+
+<script>
+    // Home script nav bar
+    var signinData=JSON.parse(localStorage.getItem('signin'))
+    console.log(signinData)
+    if(signinData!=null)
+    {
+       document.querySelector('h2').innerText='Hello '+signinData.username+' 👋. '+'Find Recipies using search box👇. You can click on the 👈name to Sign-Out'
+       document.querySelector('h2').addEventListener('click',function(){
+           localStorage.clear();window.location.reload()
+       })
+    }
+    
+    // Home script nav bar end
+    
+    
+    
+    
+    
+    </script>

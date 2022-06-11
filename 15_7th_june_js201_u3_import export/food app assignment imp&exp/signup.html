@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signup</title>
+    <style>
+
+        #navbar{
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid green;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        #options{
+            display: flex;
+            gap: 20px;
+        }
+        
+            </style>
+</head>
+<body>
+    <div id="navbar"></div>
+<h1>SignUp</h1>
+    <form action="">
+        <input id="username" type="text" placeholder="enter username">
+        <input id="email" type="text" placeholder="enter email">
+        <input id="password" type="text" placeholder="enter password">
+        <input id="" type="submit" placeholder="enter ">
+        </form>
+</body>
+</html>
+<script type="module">
+
+    import navbar from '/components.js/navbar.js'
+    console.log(navbar)
+    document.getElementById('navbar').innerHTML=navbar;
+    
+    </script>
+
+
+<script>
+    //Signup script
+    
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit',function(event){
+        event.preventDefault();
+    
+        var object={
+    
+            username:form.username.value,
+            email:form.email.value,
+            password:form.password.value
+            
+        }
+    localStorage.setItem('data',JSON.stringify(object))
+    alert('Sign-up successful. Now go to sing-in page and sign-in to proceed')
+    window.location.href='login.html'
+    })
+    
+    
+    </script>
